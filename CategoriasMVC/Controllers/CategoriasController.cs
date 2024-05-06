@@ -22,5 +22,23 @@ namespace CategoriasMVC.Controllers
 
             return View(result);
         }
+        [HttpGet]
+        public IActionResult CriarNovaCategoria()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult<CategoriaViewModel>> CriarNovaCategoria(CategoriaViewModel categoriaVM)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _categoriaService.CriarCategoria(categoriaVM);
+
+                if(result != null)
+                    return RedirectToAction(nameof(Index));
+            }
+            ViewBag.Erro = "Erro ao criar Categoria";
+            return View(categoriaVM);
+        }
     }
 }

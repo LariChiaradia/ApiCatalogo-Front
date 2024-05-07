@@ -1,3 +1,4 @@
+using CategoriasMvc.Services;
 using CategoriasMVC.Services;
 using CategoriasMVC.Services.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
@@ -14,6 +15,10 @@ builder.Services.AddHttpClient("CategoriasApi", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:CategoriasApi"]);
 });
+builder.Services.AddHttpClient("ProdutosApi", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServiceUri:ProdutosApi"]);
+});
 builder.Services.AddHttpClient("AutenticaApi", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:AutenticaApi"]);
@@ -28,6 +33,7 @@ builder.Services.AddHttpClient("AutenticaApi", c =>
 //});
 
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IAutenticacao, Autenticacao>();
 
 var app = builder.Build();

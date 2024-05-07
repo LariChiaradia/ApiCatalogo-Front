@@ -1,5 +1,5 @@
 ﻿using CategoriasMVC.Models;
-using CategoriasMVC.Services;
+using CategoriasMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CategoriasMVC.Controllers

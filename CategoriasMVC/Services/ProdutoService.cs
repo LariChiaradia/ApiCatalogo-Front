@@ -4,127 +4,122 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
-namespace CategoriasMVC.Services
+namespace CategoriasMvc.Services;
+
+public class ProdutoService : IProdutoService
 {
-    public class ProdutoService : IProdutoService
+    private readonly IHttpClientFactory _clientFactory;
+    private const string apiEndpoint = "/api/1/produtos/";
+    private readonly JsonSerializerOptions _options;
+    private ProdutoViewModel produtoVM;
+    private IEnumerable<ProdutoViewModel> produtosVM;
+
+    public ProdutoService(IHttpClientFactory clientFactory)
     {
-        private const string apiEndpoint = "/api/1/produtos";
-        private readonly IHttpClientFactory _clientFactory;
-        private readonly JsonSerializerOptions _options;
-        private ProdutoViewModel produtoVM;
-        private IEnumerable<ProdutoViewModel> produtosVM;
+        _clientFactory = clientFactory;
+        _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+    }
 
-        public ProdutoService(IHttpClientFactory clientFactory)
+    public async Task<IEnumerable<ProdutoViewModel>> GetProdutos(string token)
+    {
+        var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
+        using (var response = await client.GetAsync(apiEndpoint))
         {
-            _clientFactory = clientFactory;
-            _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        }
-
-        public async Task<IEnumerable<ProdutoViewModel>> GetProdutos(string token)
-        {
-            var client = _clientFactory.CreateClient("ProdutoApi");
-            PutTokenInHeaderAuthorization(token, client);
-
-            using(var response =  await client.GetAsync(apiEndpoint))
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var apiResponde = await response.Content.ReadAsStreamAsync();
-                    produtosVM = await JsonSerializer
-                                    .DeserializeAsync<IEnumerable<ProdutoViewModel>>
-                                    (apiResponde, _options);
-                }
-                else
-                {
-                    return null;
-                }
-                return produtosVM;
+                var apiResponse = await response.Content.ReadAsStreamAsync();
+                produtosVM = await JsonSerializer
+                               .DeserializeAsync<IEnumerable<ProdutoViewModel>>
+                               (apiResponse, _options);
+            }
+            else
+            {
+                return null;
             }
         }
-
-        public async Task<ProdutoViewModel> GetProdutosPorId(int id, string token)
+        return produtosVM;
+    }
+    public async Task<ProdutoViewModel> GetProdutoPorId(int id, string token)
+    {
+        var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
+        using (var response = await client.GetAsync(apiEndpoint + id))
         {
-            var client = _clientFactory.CreateClient("ProdutoApi");
-            PutTokenInHeaderAuthorization(token, client);
-
-            using (var response = await client.GetAsync(apiEndpoint + id))
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var apiResponse = await response.Content.ReadAsStreamAsync();
-                    produtoVM = await JsonSerializer
-                                    .DeserializeAsync<ProdutoViewModel>
-                                    (apiResponse, _options);
-                }
-                else
-                {
-                    return null;
-                }
-                return produtoVM;
+                var apiResponse = await response.Content.ReadAsStreamAsync();
+                produtoVM = await JsonSerializer
+                              .DeserializeAsync<ProdutoViewModel>
+                              (apiResponse, _options);
+
+            }
+            else
+            {
+                return null;
             }
         }
-        public async Task<ProdutoViewModel> CriarProduto(ProdutoViewModel produtoVM, string token)
+        return produtoVM;
+    }
+
+    public async Task<ProdutoViewModel> CriaProduto(ProdutoViewModel produtoVM, string token)
+    {
+        var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
+
+        var produto = JsonSerializer.Serialize(produtoVM);
+        StringContent content = new StringContent(produto, Encoding.UTF8, "application/json");
+
+        using (var response = await client.PostAsync(apiEndpoint, content))
         {
-            var client = _clientFactory.CreateClient("ProdutoApi");
-            PutTokenInHeaderAuthorization(token, client);
-
-            var produto = JsonSerializer.Serialize(produtoVM);
-            StringContent content = new StringContent(produto, Encoding.UTF8, "application/json");
-
-            using(var response = await client.PostAsync(apiEndpoint, content))
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var apiResponse = await response.Content.ReadAsStreamAsync();
-                    produtoVM = await JsonSerializer
-                                    .DeserializeAsync<ProdutoViewModel>
-                                    (apiResponse, _options);
-                }
-                else
-                {
-                    return null;
-                }
-                return produtoVM;
+                var apiResponse = await response.Content.ReadAsStreamAsync();
+                produtoVM = await JsonSerializer
+                             .DeserializeAsync<ProdutoViewModel>
+                             (apiResponse, _options);
+            }
+            else
+            {
+                return null;
             }
         }
-        public async Task<bool> AtualizarProduto(int id, ProdutoViewModel produtoVM, string token)
-        {
-            var client = _clientFactory.CreateClient("ProdutoApi");
-            PutTokenInHeaderAuthorization(token, client);
+        return produtoVM;
+    }
+    public async Task<bool> AtualizaProduto(int id, ProdutoViewModel produtoVM, string token)
+    {
+        var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
 
-            using (var response = await client.PutAsJsonAsync(apiEndpoint + id, produtoVM))
+        using (var response = await client.PutAsJsonAsync(apiEndpoint + id, produtoVM))
+        {
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-        public async Task<bool> DeletarProduto(int id, string token)
-        {
-            var client = _clientFactory.CreateClient("ProdutoApi");
-            PutTokenInHeaderAuthorization(token, client);
+    }
+    public async Task<bool> DeletaProduto(int id, string token)
+    {
+        var client = _clientFactory.CreateClient("ProdutosApi");
+        PutTokenInHeaderAuthorization(token, client);
 
-            using(var response = await client.DeleteAsync(apiEndpoint + id))
+        using (var response = await client.DeleteAsync(apiEndpoint + id))
+        {
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
             }
         }
+        return false;
+    }
 
-        public static void PutTokenInHeaderAuthorization(string token, HttpClient client)
-        {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
+    private static void PutTokenInHeaderAuthorization(string token, HttpClient client)
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 }

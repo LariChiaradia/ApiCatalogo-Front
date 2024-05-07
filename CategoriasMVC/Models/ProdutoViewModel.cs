@@ -10,10 +10,11 @@ namespace CategoriasMVC.Models
         [Required(ErrorMessage = "A descrição do produto é obrigatória")]
         public string? Descricao { get; set; }
         [Required(ErrorMessage = "Informe o preço do produto")]
-        public double Preco { get; set; }
+        public decimal Preco { get; set; }
         [Required(ErrorMessage = "Informe o caminho da imagem do produto")]
         [Display(Name = "Caminho da Imagem")]
-        public string? ImageUrl { get; set; }
+        public string? ImagemUrl { get; set; }
+
         [Display(Name = "Categoria")]
         public int CategoriaId { get; set; }
     }

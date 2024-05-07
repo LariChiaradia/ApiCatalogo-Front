@@ -1,3 +1,4 @@
+using CategoriasMvc.Services;
 using CategoriasMVC.Services;
 using CategoriasMVC.Services.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
@@ -32,6 +33,7 @@ builder.Services.AddHttpClient("AutenticaApi", c =>
 //});
 
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IAutenticacao, Autenticacao>();
 
 var app = builder.Build();

@@ -7,14 +7,14 @@ namespace CategoriasMVC.Models
         public int ProdutoId { get; set; }
         [Required(ErrorMessage = "O nome do produto é obrigatório")]
         public string? Nome { get; set; }
-        [Required(ErrorMessage = "A descrição é obrigatória")]
+        [Required(ErrorMessage = "A descrição do produto é obrigatória")]
         public string? Descricao { get; set; }
-        [Required(ErrorMessage = "O preço é obrigatório")]
+        [Required(ErrorMessage = "Informe o preço do produto")]
         public double Preco { get; set; }
-        [Required]
-        [Display(Name = "Imagem")]
+        [Required(ErrorMessage = "Informe o caminho da imagem do produto")]
+        [Display(Name = "Caminho da Imagem")]
         public string? ImageUrl { get; set; }
-        [Required(ErrorMessage = "É obrigatório informar o ID da categoria.")]
+        [Display(Name = "Categoria")]
         public int CategoriaId { get; set; }
     }
 }

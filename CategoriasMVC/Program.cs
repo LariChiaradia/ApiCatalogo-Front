@@ -14,6 +14,10 @@ builder.Services.AddHttpClient("CategoriasApi", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:CategoriasApi"]);
 });
+builder.Services.AddHttpClient("ProdutosApi", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServiceUri:ProdutosApi"]);
+});
 builder.Services.AddHttpClient("AutenticaApi", c =>
 {
     c.BaseAddress = new Uri(builder.Configuration["ServiceUri:AutenticaApi"]);

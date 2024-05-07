@@ -1,6 +1,6 @@
 ﻿using CategoriasMVC.Models;
 
-namespace CategoriasMVC.Services
+namespace CategoriasMVC.Services.Interfaces
 {
     public interface IAutenticacao
     {

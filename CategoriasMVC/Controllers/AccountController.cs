@@ -1,6 +1,7 @@
 ﻿using CategoriasMVC.Models;
 using CategoriasMVC.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Tracing;
 
 namespace CategoriasMVC.Controllers
 {

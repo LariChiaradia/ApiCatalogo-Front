@@ -7,12 +7,12 @@ namespace CategoriasMVC.Services
 {
     public class Autenticacao : IAutenticacao
     {
-        const string apiEndpointAutentica = "/api/Auth/login";
+        const string apiEndpointAutentica = "/api/autoriza/login";
         private readonly IHttpClientFactory _clientFactory;
         private readonly JsonSerializerOptions _options;
         private TokenViewModel tokenUsuario;
 
-        public Autenticacao(IHttpClientFactory clientFactory, JsonSerializerOptions options)
+        public Autenticacao(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
